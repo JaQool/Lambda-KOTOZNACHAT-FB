@@ -40,7 +40,7 @@ app.post('/webhook', function (req, res) {
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
     if (shoplist.findReg(event.sender.id + '*')){
-         //sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
+          sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
           res.sendStatus(200);
     }else{
       if (event.message && event.message.text == "#bye") {
@@ -60,7 +60,6 @@ app.post('/webhook', function (req, res) {
       }  
       else {
           console.log('where am i');
-          res.sendStatus(200);
       }
     }
   }
