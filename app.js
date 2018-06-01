@@ -34,12 +34,14 @@ app.post('/webhook', function (req, res) {
   } catch (ex) {
     console.log(ex)
   }
-  shoplist = shopdata.split(/\r?\n/);
-  roomlist = roomdata.split(/\r?\n/);
+  shoplist = shopdata.split(/\r?\n?:/);
+  roomlist = roomdata.split(/\r?\n?:/);
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
     //console.log(event);
+    console.log(shoplist);
+    console.log(shoplist.indexOf(event.sender.id));
     if (shoplist.indexOf(event.sender.id) != -1){
         if (event.message && event.message.text == "#bye") {
             sendMessage(event.sender.id, {text: shoplist[1] + roomlist[0]});
@@ -55,11 +57,8 @@ app.post('/webhook', function (req, res) {
           res.sendStatus(200);
       }
       else if (event.message && event.message.text[0] != "#") {
-        fs.writeFile('shops.txt', event.sender.id+':'+event.message.text, (err) => {
-            if (err) throw err;
-            sendMessage(event.sender.id, {text: '# から始まるコードを入力して下さい。'});
-            res.sendStatus(200);
-        });
+          sendMessage(event.sender.id, {text: '# から始まるコードを入力して下さい。'});
+          res.sendStatus(200);
       }  
       else if (event.message && event.message.text[0] == "#") {
         fs.writeFile('shops.txt', event.sender.id+':'+event.message.text, (err) => {
@@ -70,6 +69,7 @@ app.post('/webhook', function (req, res) {
       }  
       else {
         res.sendStatus(200);
+        console.log('where am i');
         return false;
       }
     }
@@ -121,6 +121,4 @@ app.get('/webhook', (req, res) => {
       res.sendStatus(403);      
     }
   }
-  
-  data = [];
 });
