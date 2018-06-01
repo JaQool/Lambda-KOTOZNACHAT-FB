@@ -25,26 +25,28 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 // handler receiving messages
 app.post('/webhook', function (req, res) {
-  var data = new Array();
+  var shoplist = new Array();
   try {
-      lineReader.eachLine('database.txt', function(err, data) {
-          if (err) return console.error(err);
-          console.log(data.toString());
+      lineReader.eachLine('database.txt', function(line, last) {
+          for (var index = 0; index < line.length; ++index) {
+              shoplist.push(line);
+          }
+          var events = req.body.entry[0].messaging;
+          for (var i = 0; i < events.length; i++) {
+              var event = events[i];
+              if (event.message && event.message.text == "#bye") {
+                  sendMessage(event.sender.id, {text: shoplist});
+              }
+              if (event.message && event.message.text == "#shop") {
+                  sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
+              }
+          }
       });
   } 
   catch (ex) {
-      console.log(ex)
+      //console.log(ex)
   }
-  var events = req.body.entry[0].messaging;
-  for (var i = 0; i < events.length; i++) {
-      var event = events[i];
-      if (event.message && event.message.text == "#bye") {
-          sendMessage(event.sender.id, {text: data});
-      }
-      if (event.message && event.message.text == "#shop") {
-          sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
-      }
-  }
+
   res.sendStatus(200);
 });
 
