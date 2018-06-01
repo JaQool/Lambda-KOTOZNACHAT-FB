@@ -30,15 +30,12 @@ app.post('/webhook', function (req, res) {
   var shoplist = new Array();
   try {
       fs.readFile('database.txt', 'utf8', function(err, data) {
-          for (var index = 0; index < data.length; ++index) {
-              console.log('step2');
-              shoplist.push(data);
-          }
+          shoplist = data.split(/\r?\n/);
           var events = req.body.entry[0].messaging;
           for (var i = 0; i < events.length; i++) {
               var event = events[i];
               if (event.message && event.message.text == "#bye") {
-                  sendMessage(event.sender.id, {text: data[0]});
+                  sendMessage(event.sender.id, {text: shoplist[1]});
                   res.sendStatus(200);
               }
               if (event.message && event.message.text == "#shop") {
