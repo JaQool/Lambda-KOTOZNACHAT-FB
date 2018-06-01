@@ -26,31 +26,34 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 // handler receiving messages
 app.post('/webhook', function (req, res) {
   
-  console.log('step0');
   var shoplist = new Array();
+  var roomlist = new Array();
   try {
-    fs.readFile('talkrooms.txt', 'utf8', function(err, roomdata) {
-      fs.readFile('database.txt', 'utf8', function(err, shopdata) {
-          shoplist = shopdata.split(/\r?\n/);
-          roomlist = roomdata.split(/\r?\n/);
-          var events = req.body.entry[0].messaging;
-          for (var i = 0; i < events.length; i++) {
-                var event = events[i];
-                if (event.message && event.message.text == "#bye") {
-                    sendMessage(event.sender.id, {text: shoplist[1] + roomlist[0]});
-                    res.sendStatus(200);
-                }
-                if (event.message && event.message.text == "#shop") {
-                    sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
-                    res.sendStatus(200);
-              }
+    var shopdata = fs.readFileSync('shops.txt', 'utf8');
+    var roomdata = fs.readFileSync('talkrooms.txt', 'utf8');
+  } catch (ex) {
+    console.log(ex)
+  }
+  shoplist = shopdata.split(/\r?\n/);
+  roomlist = roomdata.split(/\r?\n/);
+  roomdata.indexof(event.sender.id);
+  var events = req.body.entry[0].messaging;
+  for (var i = 0; i < events.length; i++) {
+    if event.sender.id
+        var event = events[i];
+        if (event.message && event.message.text == "#bye") {
+            sendMessage(event.sender.id, {text: shoplist[1] + roomlist[0]});
+            res.sendStatus(200);
+        }
+        if (event.message && event.message.text == "#shop") {
+            sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
+            res.sendStatus(200);
+      }
           }
       })
     })
   } 
-  catch (ex) {
-      console.log(ex)
-  }
+
 });
 
 // generic function sending messages
