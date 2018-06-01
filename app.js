@@ -34,8 +34,8 @@ app.post('/webhook', function (req, res) {
   } catch (ex) {
     console.log(ex)
   }
-  shoplist = shopdata.split(/\r?\n?:/);
-  roomlist = roomdata.split(/\r?\n?:/);
+  shoplist = shopdata.split(/\r?\n/);
+  roomlist = roomdata.split(/\r?\n/);
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
@@ -61,7 +61,7 @@ app.post('/webhook', function (req, res) {
           res.sendStatus(200);
       }  
       else if (event.message && event.message.text[0] == "#") {
-        fs.writeFile('shops.txt', event.sender.id+':'+event.message.text, (err) => {
+        fs.appendFile('shops.txt', '\n'+event.sender.id+':'+event.message.text, (err) => {
             if (err) throw err;
             sendMessage(event.sender.id, {text: 'コード ' + event.message.text + ' で登録しました。こちらのコードをQRコードに添えてご案内下さい。'});
             res.sendStatus(200);
