@@ -36,11 +36,12 @@ app.post('/webhook', function (req, res) {
   }
   shoplist = shopdata.split(/\r?\n/);
   roomlist = roomdata.split(/\r?\n/);
-  roomdata.indexof(event.sender.id);
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
-    if event.sender.id
-        var event = events[i];
+    var event = events[i];
+    //console.log(event);
+    if (shoplist.indexOf(event.sender.id != -1)){
+        console.log(shoplist.indexOf(event.sender.id);
         if (event.message && event.message.text == "#bye") {
             sendMessage(event.sender.id, {text: shoplist[1] + roomlist[0]});
             res.sendStatus(200);
@@ -48,12 +49,15 @@ app.post('/webhook', function (req, res) {
         if (event.message && event.message.text == "#shop") {
             sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
             res.sendStatus(200);
-      }
-          }
-      })
-    })
-  } 
-
+        } 
+    }else{
+      fs.writeFile('shops.txt', event.sender.id, (err) => {
+        if (err) throw err;
+        console.log('The file has been saved!');
+        res.sendStatus(200);
+      });
+    } 
+  }
 });
 
 // generic function sending messages
