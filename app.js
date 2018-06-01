@@ -25,7 +25,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 // handler receiving messages
 app.post('/webhook', function (req, res) {
-  
+  console.log('two');
   var shoplist = new Array();
   var roomlist = new Array();
   try {
@@ -39,34 +39,28 @@ app.post('/webhook', function (req, res) {
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    console.log(events.length);
     if (shoplist.findReg(event.sender.id + '*')){
-          sendMessage(event.sender.id, {text: "Hi, I'm interchat!!"});
+         //sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
           res.sendStatus(200);
-          return;
     }else{
       if (event.message && event.message.text == "#bye") {
           sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
           res.sendStatus(200);
-          return;
       }
       else if (event.message && event.message.text[0] != "#") {
           sendMessage(event.sender.id, {text: '# から始まるコードを入力して下さい。'});
           res.sendStatus(200);
-          return;
       }  
       else if (event.message && event.message.text[0] == "#") {
         fs.appendFile('shops.txt', '\n'+event.sender.id+':'+event.message.text, (err) => {
             if (err) throw err;
             sendMessage(event.sender.id, {text: 'コード ' + event.message.text + ' で登録しました。こちらのコードをQRコードに添えてご案内下さい。'});
             res.sendStatus(200);
-            return;
         });
       }  
       else {
-        res.sendStatus(200);
-        console.log('where am i');
-        return false;
+          console.log('where am i');
+          res.sendStatus(200);
       }
     }
   }
