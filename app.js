@@ -42,7 +42,7 @@ app.post('/webhook', function (req, res) {
     console.log(shoplist.findReg(event.sender.id));
     if (shoplist.findReg(event.sender.id).length > 0){
       if (event.message && event.message.text == "#bye") {
-          sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
+          sendMessage(event.sender.id, {text: "さようなら"});
           res.sendStatus(200);
       } else {
           sendMessage(event.sender.id, {text: "こんにちは"});
