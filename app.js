@@ -25,8 +25,11 @@ app.post('/webhook', function (req, res) {
     var events = req.body.entry[0].messaging;
     for (var i = 0; i < events.length; i++) {
         var event = events[i];
-        if (event.message && event.message.text) {
-            sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
+        if (event.message && event.message.text == "#bye") {
+            sendMessage(event.sender.id, {text: "end conversation"});
+        }
+        if (event.message && event.message.text == "#shop") {
+            sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
         }
     }
     res.sendStatus(200);
