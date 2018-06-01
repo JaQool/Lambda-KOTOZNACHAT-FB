@@ -39,32 +39,28 @@ app.post('/webhook', function (req, res) {
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    //console.log(event);
-    console.log(shoplist);
-    console.log(shoplist.indexOf(event.sender.id));
-    if (shoplist.indexOf(event.sender.id) != -1){
-        if (event.message && event.message.text == "#bye") {
-            sendMessage(event.sender.id, {text: shoplist[1] + roomlist[0]});
-            res.sendStatus(200);
-        }
-        if (event.message && event.message.text == "#shop") {
-            sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
-            res.sendStatus(200);
-        } 
+    console.log(events.length);
+    if (shoplist.findReg(event.sender.id + '*')){
+          sendMessage(event.sender.id, {text: "Hi, I'm interchat!!"});
+          res.sendStatus(200);
+          return;
     }else{
       if (event.message && event.message.text == "#bye") {
           sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
           res.sendStatus(200);
+          return;
       }
       else if (event.message && event.message.text[0] != "#") {
           sendMessage(event.sender.id, {text: '# から始まるコードを入力して下さい。'});
           res.sendStatus(200);
+          return;
       }  
       else if (event.message && event.message.text[0] == "#") {
         fs.appendFile('shops.txt', '\n'+event.sender.id+':'+event.message.text, (err) => {
             if (err) throw err;
             sendMessage(event.sender.id, {text: 'コード ' + event.message.text + ' で登録しました。こちらのコードをQRコードに添えてご案内下さい。'});
             res.sendStatus(200);
+            return;
         });
       }  
       else {
@@ -94,6 +90,14 @@ function sendMessage(recipientId, message) {
         }
     });
 };
+
+Array.prototype.findReg = function(match) {
+    var reg = new RegExp(match);
+
+    return this.filter(function(item){
+        return typeof item == 'string' && item.match(reg);
+    });
+}
 
 // Accepts GET requests at the /webhook endpoint
 app.get('/webhook', (req, res) => {
