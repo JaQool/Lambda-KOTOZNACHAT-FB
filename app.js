@@ -19,16 +19,16 @@ const
 
 var fs = require('fs');
 var lineReader = require('./line_reader.js');
-var data = new Array();
       
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 // handler receiving messages
 app.post('/webhook', function (req, res) {
+  var data = new Array();
   
-  lineReader.eachLine('file.txt', function(line, last) {
-    data.append(line);
+  lineReader.eachLine('database.txt', function(line, last) {
+    data.push(line);
   });
   console.log(data);
   
@@ -90,4 +90,6 @@ app.get('/webhook', (req, res) => {
       res.sendStatus(403);      
     }
   }
+  
+  data = [];
 });
