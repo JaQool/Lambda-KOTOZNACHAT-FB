@@ -40,8 +40,7 @@ app.post('/webhook', function (req, res) {
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
     //console.log(event);
-    if (shoplist.indexOf(event.sender.id != -1)){
-        console.log(shoplist.indexOf(event.sender.id);
+    if (shoplist.indexOf(event.sender.id) != -1){
         if (event.message && event.message.text == "#bye") {
             sendMessage(event.sender.id, {text: shoplist[1] + roomlist[0]});
             res.sendStatus(200);
@@ -51,6 +50,7 @@ app.post('/webhook', function (req, res) {
             res.sendStatus(200);
         } 
     }else{
+      if (event.message && event.message.text == "#shop") {
       fs.writeFile('shops.txt', event.sender.id, (err) => {
         if (err) throw err;
         console.log('The file has been saved!');
