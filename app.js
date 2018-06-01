@@ -17,6 +17,9 @@ const
   body_parser = require('body-parser'),
   app = express().use(body_parser.json()); // creates express http server
 
+var fs = require('fs');
+
+      
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
@@ -25,6 +28,7 @@ app.post('/webhook', function (req, res) {
     var events = req.body.entry[0].messaging;
     for (var i = 0; i < events.length; i++) {
         var event = events[i];
+        open 
         if (event.message && event.message.text == "#bye") {
             sendMessage(event.sender.id, {text: "end conversation"});
         }
