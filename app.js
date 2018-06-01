@@ -39,16 +39,21 @@ app.post('/webhook', function (req, res) {
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    console.log(shoplist.findReg(event.sender.id + '*').length);
-    if (shoplist.findReg(event.sender.id + '*').length > 0){
+    console.log(shoplist.findReg(event.sender.id));
+    if (shoplist.findReg(event.sender.id).length > 0){
+      if (event.message && event.message.text == "#bye") {
+          sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
+          res.sendStatus(200);
+      } else {
           sendMessage(event.sender.id, {text: "こんにちは"});
           res.sendStatus(200);
+      }
     }else{
       if (event.message && event.message.text == "#bye") {
           sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
           res.sendStatus(200);
       }
-      else if (shoplist.findReg('*' + event.message.text)){
+      else if (shoplist.findReg(event.message.text).length > 0){
           sendMessage(event.sender.id, {text: "入力されたコード " + event.message.text + "は既に登録されています。他のコードを入力してください。"});
           res.sendStatus(200);
       }
