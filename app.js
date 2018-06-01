@@ -50,13 +50,29 @@ app.post('/webhook', function (req, res) {
             res.sendStatus(200);
         } 
     }else{
-      if (event.message && event.message.text == "#shop") {
-      fs.writeFile('shops.txt', event.sender.id, (err) => {
-        if (err) throw err;
-        console.log('The file has been saved!');
+      if (event.message && event.message.text == "#bye") {
+          sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
+          res.sendStatus(200);
+      }
+      else if (event.message && event.message.text[0] != "#") {
+        fs.writeFile('shops.txt', event.sender.id+':'+event.message.text, (err) => {
+            if (err) throw err;
+            sendMessage(event.sender.id, {text: '# から始まるコードを入力して下さい。'});
+            res.sendStatus(200);
+        });
+      }  
+      else if (event.message && event.message.text[0] == "#") {
+        fs.writeFile('shops.txt', event.sender.id+':'+event.message.text, (err) => {
+            if (err) throw err;
+            sendMessage(event.sender.id, {text: 'コード ' + event.message.text + ' で登録しました。こちらのコードをQRコードに添えてご案内下さい。'});
+            res.sendStatus(200);
+        });
+      }  
+      else {
         res.sendStatus(200);
-      });
-    } 
+        return false;
+      }
+    }
   }
 });
 
