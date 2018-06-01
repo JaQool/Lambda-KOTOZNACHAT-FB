@@ -27,8 +27,9 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 app.post('/webhook', function (req, res) {
   var data = new Array();
   try {
-      lineReader.eachLine('database.txt', function(line, last) {
-          data.push(line);
+      lineReader.eachLine('database.txt', function(err, data) {
+          if (err) return console.error(err);
+          console.log(data.toString());
       });
   } 
   catch (ex) {
@@ -38,7 +39,7 @@ app.post('/webhook', function (req, res) {
   for (var i = 0; i < events.length; i++) {
       var event = events[i];
       if (event.message && event.message.text == "#bye") {
-          sendMessage(event.sender.id, {text: data[0]});
+          sendMessage(event.sender.id, {text: data});
       }
       if (event.message && event.message.text == "#shop") {
           sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
