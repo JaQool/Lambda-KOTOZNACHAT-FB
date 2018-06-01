@@ -26,23 +26,25 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 // handler receiving messages
 app.post('/webhook', function (req, res) {
   var data = new Array();
-  
-  lineReader.eachLine('database.txt', function(line, last) {
-    data.push(line);
-  });
-  console.log(data);
-  
-    var events = req.body.entry[0].messaging;
-    for (var i = 0; i < events.length; i++) {
-        var event = events[i];
-        if (event.message && event.message.text == "#bye") {
-            sendMessage(event.sender.id, {text: "end conversation"});
-        }
-        if (event.message && event.message.text == "#shop") {
-            sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
-        }
-    }
-    res.sendStatus(200);
+  try {
+      lineReader.eachLine('database.txt', function(line, last) {
+          data.push(line);
+      });
+  } 
+  catch (ex) {
+      console.log(ex)
+  }
+  var events = req.body.entry[0].messaging;
+  for (var i = 0; i < events.length; i++) {
+      var event = events[i];
+      if (event.message && event.message.text == "#bye") {
+          sendMessage(event.sender.id, {text: data[0]});
+      }
+      if (event.message && event.message.text == "#shop") {
+          sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
+      }
+  }
+  res.sendStatus(200);
 });
 
 // generic function sending messages
