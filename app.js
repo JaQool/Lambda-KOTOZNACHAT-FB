@@ -29,29 +29,28 @@ app.post('/webhook', function (req, res) {
   console.log('step0');
   var shoplist = new Array();
   try {
-      lineReader.eachLine('database.txt', function(line, last) {
-          console.log('step1');
-          for (var index = 0; index < line.length; ++index) {
+      fs.readFile('database.txt', 'utf8', function(err, data) {
+          for (var index = 0; index < data.length; ++index) {
               console.log('step2');
-              shoplist.push(line);
+              shoplist.push(data);
           }
           var events = req.body.entry[0].messaging;
           for (var i = 0; i < events.length; i++) {
               var event = events[i];
               if (event.message && event.message.text == "#bye") {
-                  sendMessage(event.sender.id, {text: shoplist[0]});
+                  sendMessage(event.sender.id, {text: data[0]});
+                  res.sendStatus(200);
               }
               if (event.message && event.message.text == "#shop") {
                   sendMessage(event.sender.id, {text: "Your newly registered shop name is: " + event.message.text});
+                  res.sendStatus(200);
               }
           }
-      });
+      })
   } 
   catch (ex) {
-      //console.log(ex)
+      console.log(ex)
   }
-
-  res.sendStatus(200);
 });
 
 // generic function sending messages
