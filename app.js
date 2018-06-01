@@ -25,6 +25,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 // handler receiving messages
 app.post('/webhook', function (req, res) {
+  res.sendStatus(200);
   console.log('two');
   var shoplist = new Array();
   var roomlist = new Array();
@@ -40,7 +41,7 @@ app.post('/webhook', function (req, res) {
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
     if (shoplist.findReg(event.sender.id + '*')){
-          sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
+          sendMessage(event.sender.id, {text: "k"});
           res.sendStatus(200);
     }else{
       if (event.message && event.message.text == "#bye") {
