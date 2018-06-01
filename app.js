@@ -18,6 +18,8 @@ const
   app = express().use(body_parser.json()); // creates express http server
 
 var fs = require('fs');
+var lineReader = require('./line_reader.js');
+var data = new Array();
       
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
@@ -25,11 +27,10 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 // handler receiving messages
 app.post('/webhook', function (req, res) {
   
-    fs.readFile('database.txt', function(err, data) {
-      var buffer;
-      buffer.write(data);
-      console.log(buffer);
-    });
+  lineReader.eachLine('file.txt', function(line, last) {
+    data.append(line);
+  });
+  console.log(data);
   
     var events = req.body.entry[0].messaging;
     for (var i = 0; i < events.length; i++) {
