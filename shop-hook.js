@@ -23,8 +23,7 @@ var fs = require('fs');
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 // handler receiving messages
-app.post('/webhook', function (req, res) {
-  console.log('two');
+app.post('/shophook', function (req, res) {
   var shoplist = new Array();
   var roomlist = new Array();
   try {
@@ -103,7 +102,7 @@ Array.prototype.findReg = function(match) {
 }
 
 // Accepts GET requests at the /webhook endpoint
-app.get('/webhook', (req, res) => {
+app.get('/shophook', (req, res) => {
   
   /** UPDATE YOUR VERIFY TOKEN **/
   const VERIFY_TOKEN = "interchat";
@@ -128,10 +127,4 @@ app.get('/webhook', (req, res) => {
       res.sendStatus(403);      
     }
   }
-});
-
-// handler receiving messages
-app.post('/foo', function (req, res) {
-  console.log('three');
-  res.sendStatus(200);
 });

@@ -1,16 +1,16 @@
 {
-  "name": "messenger-quick-start",
+  "name": "kotozna-chat",
   "version": "1.0.0",
-  "description": "An example webhook for Facebook Messenger quick start tutorial.",
-  "main": "app.js",
+  "description": "Chat app for stores registered through kotozna.",
+  "main": "shop-hook.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node shop-hook.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/fbsamples/messenger-platform-samples.git"
   },
-  "author": "Facebook",
+  "author": "JaQool",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.0",
