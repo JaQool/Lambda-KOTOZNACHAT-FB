@@ -104,7 +104,6 @@ app.get('/shophook', (req, res) => {
 
 // handler receiving messages
 app.post('/patronhook', function (req, res) {
-  console.log('two');
   var shoplist = new Array();
   var roomlist = new Array();
   try {
@@ -131,12 +130,8 @@ app.post('/patronhook', function (req, res) {
           sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
           res.sendStatus(200);
       }
-      else if (shoplist.findReg(event.message.text).length > 0){
-          sendMessage(event.sender.id, {text: "入力されたコード " + event.message.text + "は既に登録されています。他のコードを入力してください。"});
-          res.sendStatus(200);
-      }
       else if (event.message && event.message.text[0] != "#") {
-          sendMessage(event.sender.id, {text: '# から始まるコードを入力して下さい。'});
+          sendMessage(event.sender.id, {text: 'InterChatより : 会話がまだスタートしていません。 # から始まる店舗IDを入力してください'});
           res.sendStatus(200);
       }  
       else if (event.message && event.message.text[0] == "#" && shoplist.findReg(event.message.text).length > 0) {
@@ -145,6 +140,10 @@ app.post('/patronhook', function (req, res) {
             sendMessage(event.sender.id, {text: 'InterChatより : '+event.message.text+' 店舗名：と会話を開始します。話しかけてください。会話を終了する場合は #bye と入力して下さい。'});
             res.sendStatus(200);
         });
+      }  
+      else if (event.message && event.message.text[0] == "#" && shoplist.findReg(event.message.text).length < 1) {
+          sendMessage(event.sender.id, {text: 'InterChatより: ' + event.message.text + ' の店舗は存在しません。'});
+          res.sendStatus(200);
       }  
       else {
           console.log('where am i');
