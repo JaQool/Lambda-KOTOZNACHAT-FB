@@ -41,29 +41,29 @@ app.post('/shophook', function (req, res) {
     console.log(shoplist.findReg(event.sender.id));
     if (shoplist.findReg(event.sender.id).length > 0){
       if (event.message && event.message.text == "#bye") {
-          sendMessage(event.sender.id, {text: "さようなら"});
+          sendMessage(event.sender.id, {text: "さようなら"}, 'shop');
           res.sendStatus(200);
       } else {
-          sendMessage(event.sender.id, {text: "こんにちは"});
+          sendMessage(event.sender.id, {text: "こんにちは"}, 'shop');
           res.sendStatus(200);
       }
     }else{
       if (event.message && event.message.text == "#bye") {
-          sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
+          sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"}, 'shop');
           res.sendStatus(200);
       }
       else if (shoplist.findReg(event.message.text).length > 0){
-          sendMessage(event.sender.id, {text: "入力されたコード " + event.message.text + "は既に登録されています。他のコードを入力してください。"});
+          sendMessage(event.sender.id, {text: "入力されたコード " + event.message.text + "は既に登録されています。他のコードを入力してください。"}, 'shop');
           res.sendStatus(200);
       }
       else if (event.message && event.message.text[0] != "#") {
-          sendMessage(event.sender.id, {text: '# から始まるコードを入力して下さい。'});
+          sendMessage(event.sender.id, {text: '# から始まるコードを入力して下さい。'}, 'shop');
           res.sendStatus(200);
       }  
       else if (event.message && event.message.text[0] == "#") {
         fs.appendFile('shops.txt', '\n'+event.sender.id+':'+event.message.text, (err) => {
             if (err) throw err;
-            sendMessage(event.sender.id, {text: 'コード ' + event.message.text + ' で登録しました。こちらのコードをQRコードに添えてご案内下さい。'});
+            sendMessage(event.sender.id, {text: 'コード ' + event.message.text + ' で登録しました。こちらのコードをQRコードに添えてご案内下さい。'}, 'shop');
             res.sendStatus(200);
         });
       }  
@@ -119,37 +119,39 @@ app.post('/patronhook', function (req, res) {
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
+    console.log(roomlist);
+    console.log(event.sender.id+':'+event.message.text);
     if (roomlist.findReg(event.sender.id+':'+event.message.text).length > 0){
       if (event.message && event.message.text == "#bye") {
-          sendMessage(event.sender.id, {text: "さようなら"});
+          sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
       } else {
-          sendMessage(event.sender.id, {text: "こんにちは"});
+          sendMessage(event.sender.id, {text: "こんにちは"}, 'patron');
           res.sendStatus(200);
       }
     }else{
       console.log('step2')
       if (event.message && event.message.text == "#bye") {
         console.log('step3')
-          sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
+          sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"}, 'patron');
           res.sendStatus(200);
       }
       else if (event.message && event.message.text[0] != "#") {
         console.log('step4')
-          sendMessage(event.sender.id, {text: 'InterChatより : 会話がまだスタートしていません。 # から始まる店舗IDを入力してください'});
+          sendMessage(event.sender.id, {text: 'InterChatより : 会話がまだスタートしていません。 # から始まる店舗IDを入力してください'}, 'patron');
           res.sendStatus(200);
       }  
       else if (event.message && event.message.text[0] == "#" && shoplist.findReg(event.message.text).length > 0) {
         console.log('step5')
         fs.appendFile('talkrooms.txt', '\n'+event.sender.id+':'+event.message.text, (err) => {
             if (err) throw err;
-            sendMessage(event.sender.id, {text: 'InterChatより : '+event.message.text+' 店舗名：と会話を開始します。話しかけてください。会話を終了する場合は #bye と入力して下さい。'});
+            sendMessage(event.sender.id, {text: 'InterChatより : '+event.message.text+' 店舗名：と会話を開始します。話しかけてください。会話を終了する場合は #bye と入力して下さい。'}, 'patron');
             res.sendStatus(200);
         });
       }  
       else if (event.message && event.message.text[0] == "#" && shoplist.findReg(event.message.text).length < 1) {
         console.log('step6')
-          sendMessage(event.sender.id, {text: 'InterChatより: ' + event.message.text + ' の店舗は存在しません。'});
+          sendMessage(event.sender.id, {text: 'InterChatより: ' + event.message.text + ' の店舗は存在しません。'}, 'patron');
           res.sendStatus(200);
       }  
       else {
@@ -189,10 +191,27 @@ app.get('/patronhook', (req, res) => {
 });
 
 // generic function sending messages
-function sendMessage(recipientId, message) {
+function sendMessage(recipientId, message, tokenType) {
+  if (tokenType == 'patron'){
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+        qs: {access_token: process.env.PATRON_ACCESS_TOKEN},
+        method: 'POST',
+        json: {
+            recipient: {id: recipientId},
+            message: message,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }
+    })
+  } else if (tokenType == 'shop'){
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token: process.env.SHOP_ACCESS_TOKEN},
         method: 'POST',
         json: {
             recipient: {id: recipientId},
@@ -205,6 +224,7 @@ function sendMessage(recipientId, message) {
             console.log('Error: ', response.body.error);
         }
     });
+  }
 };
 
 Array.prototype.findReg = function(match) {
