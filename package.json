@@ -2,9 +2,9 @@
   "name": "kotozna-chat",
   "version": "1.0.0",
   "description": "Chat app for stores registered through kotozna.",
-  "main": "shop-hook.js",
+  "main": "webhook.js",
   "scripts": {
-    "start": "node shop-hook.js"
+    "start": "node webhook.js"
   },
   "repository": {
     "type": "git",
