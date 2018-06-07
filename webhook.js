@@ -119,9 +119,8 @@ app.post('/patronhook', function (req, res) {
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    console.log(roomlist);
-    console.log(event.sender.id+':'+event.message.text);
-    if (roomlist.findReg(event.sender.id+':'+event.message.text).length > 0){
+    console.log(roomlist.findReg(event.sender.id));
+    if (roomlist.findReg(event.sender.id).length > 0){
       if (event.message && event.message.text == "#bye") {
           sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
