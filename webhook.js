@@ -24,6 +24,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 // handler receiving messages
 app.post('/shophook', function (req, res) {
+  console.log('shophook');
   var shoplist = new Array();
   var roomlist = new Array();
   try {
@@ -77,7 +78,7 @@ app.post('/shophook', function (req, res) {
 // Accepts GET requests at the /webhook endpoint
 app.get('/shophook', (req, res) => {
   
-  /** UPDATE YOUR VERIFY TOKEN **/
+  /** UPDATE YOUR VERIFY TOKEN **/ 
   const VERIFY_TOKEN = "interchat";
   
   // Parse params from the webhook verification request
@@ -104,6 +105,7 @@ app.get('/shophook', (req, res) => {
 
 // handler receiving messages
 app.post('/patronhook', function (req, res) {
+  console.log('patronhook');
   var shoplist = new Array();
   var roomlist = new Array();
   try {
@@ -126,15 +128,19 @@ app.post('/patronhook', function (req, res) {
           res.sendStatus(200);
       }
     }else{
+      console.log('step2')
       if (event.message && event.message.text == "#bye") {
+        console.log('step3')
           sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"});
           res.sendStatus(200);
       }
       else if (event.message && event.message.text[0] != "#") {
+        console.log('step4')
           sendMessage(event.sender.id, {text: 'InterChatより : 会話がまだスタートしていません。 # から始まる店舗IDを入力してください'});
           res.sendStatus(200);
       }  
       else if (event.message && event.message.text[0] == "#" && shoplist.findReg(event.message.text).length > 0) {
+        console.log('step5')
         fs.appendFile('talkrooms.txt', '\n'+event.sender.id+':'+event.message.text, (err) => {
             if (err) throw err;
             sendMessage(event.sender.id, {text: 'InterChatより : '+event.message.text+' 店舗名：と会話を開始します。話しかけてください。会話を終了する場合は #bye と入力して下さい。'});
@@ -142,6 +148,7 @@ app.post('/patronhook', function (req, res) {
         });
       }  
       else if (event.message && event.message.text[0] == "#" && shoplist.findReg(event.message.text).length < 1) {
+        console.log('step6')
           sendMessage(event.sender.id, {text: 'InterChatより: ' + event.message.text + ' の店舗は存在しません。'});
           res.sendStatus(200);
       }  
@@ -157,7 +164,7 @@ app.post('/patronhook', function (req, res) {
 app.get('/patronhook', (req, res) => {
   
   /** UPDATE YOUR VERIFY TOKEN **/
-  const VERIFY_TOKEN = "kotoznachat";
+  const VERIFY_TOKEN = "interchat";
   
   // Parse params from the webhook verification request
   let mode = req.query['hub.mode'];
