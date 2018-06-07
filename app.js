@@ -129,3 +129,9 @@ app.get('/webhook', (req, res) => {
     }
   }
 });
+
+// handler receiving messages
+app.post('/foo', function (req, res) {
+  console.log('three');
+  res.sendStatus(200);
+});
