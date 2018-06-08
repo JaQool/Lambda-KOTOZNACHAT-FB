@@ -39,15 +39,17 @@ app.post('/shophook', function (req, res) {
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    if (shoplist.findReg(event.sender.id).length > 0){
+    if (shoplist.findReg(event.sender.id).length > 0 && roomlist.findReg(event.sender.id).length > 0){
+      var shopHash = roomlist.findReg(event.sender.id)[0].split(':')[1];
+      var patronID = shoplist.findReg(shopID)[0].split(':')[0];
       if (event.message && event.message.text == "#bye") {
-          sendMessage(event.sender.id, {text: "さようなら"}, 'shop');
+          sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
       } else {
-          sendMessage(event.sender.id, {text: "こんにちは"}, 'shop');
-          getPicture();
+          sendMessage(shopID, event.message.text, 'shop');
           res.sendStatus(200);
       }
+
     }else{
       if (event.message && event.message.text == "#bye") {
           sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"}, 'shop');
@@ -122,8 +124,6 @@ app.post('/patronhook', function (req, res) {
     if (roomlist.findReg(event.sender.id).length > 0){
       var shopHash = roomlist.findReg(event.sender.id)[0].split(':')[1];
       var shopID = shoplist.findReg(shopID)[0].split(':')[0];
-      console.log(shopID);
-      console.log(event.sender.id);
       if (event.message && event.message.text == "#bye") {
           sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
@@ -242,7 +242,7 @@ Array.prototype.findReg = function(match) {
   const pageFieldSet = 'name, category, link, picture, is_verified';
 */
 
-function getPicture() {
+/*function getPicture() {
     var data = request({
       method: 'GET',
       uri: 'https://graph.facebook.com/238887513329032',
@@ -258,4 +258,4 @@ function getPicture() {
         }
         console.log(body);
     })
-  };
+  };*/
