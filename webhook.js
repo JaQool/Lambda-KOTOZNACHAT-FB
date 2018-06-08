@@ -39,18 +39,24 @@ app.post('/shophook', function (req, res) {
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    if (shoplist.findReg(event.sender.id).length > 0 && roomlist.findReg(event.sender.id).length > 0){
+    if (shoplist.findReg(event.sender.id).length > 0){
       var shopHash = shoplist.findReg(event.sender.id)[0].split(':')[1];
-      var patronID = roomlist.findReg(shopHash)[0].split(':')[0];
-      if (event.message && event.message.text == "#bye") {
-          sendMessage(event.sender.id, {text: "さようなら"}, 'shop');
-          sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
-          res.sendStatus(200);
-      } else {
-          sendMessage(shopID, event.message.text, 'patron');
-          res.sendStatus(200);
-      }
+      if (roomlist.findReg(shopHash).length > 0) {
+        var talkroom = roomlist.findReg(event.sender.id)[0]
+        var patronID = roomlist.findReg(shopHash)[0].split(':')[0];
+        if (event.message && event.message.text == "#bye") {
 
+            sendMessage(event.sender.id, {text: "対話を終了しました。"}, 'shop');
+            sendMessage(patronID, {text: "対話を終了しました。"}, 'patron');
+            res.sendStatus(200);
+        } else {
+            sendMessage(patronID, event.message.text, 'patron');
+            res.sendStatus(200);
+        }
+      }else{
+        sendMessage(event.sender.id, {text: "InterChatより ：トークが開始されていないか、ユーザーが存在しません。あなたの店舗コードは" +shopHash+ "です。"}, 'shop');
+        res.sendStatus(200);
+      }
     }else{
       if (event.message && event.message.text == "#bye") {
           sendMessage(event.sender.id, {text: "入力されたコードは登録できません。他のコードを入力してください。"}, 'shop');
