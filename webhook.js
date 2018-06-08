@@ -45,7 +45,8 @@ app.post('/shophook', function (req, res) {
         var talkroom = roomlist.findReg(event.sender.id)[0]
         var patronID = roomlist.findReg(shopHash)[0].split(':')[0];
         if (event.message && event.message.text == "#bye") {
-
+          removeLine('talkrooms.txt', talkroom, (err) => {
+            if (err) throw err;
             sendMessage(event.sender.id, {text: "対話を終了しました。"}, 'shop');
             sendMessage(patronID, {text: "対話を終了しました。"}, 'patron');
             res.sendStatus(200);
@@ -244,15 +245,7 @@ Array.prototype.findReg = function(match) {
 
 
 
-/*module.exports = (app) => {
-
-  // you'll need to have requested 'user_about_me' permissions
-  // in order to get 'quotes' and 'about' fields from search
-  const userFieldSet = 'name, link, is_verified, picture';
-  const pageFieldSet = 'name, category, link, picture, is_verified';
-*/
-
-/*function getPicture() {
+function getPicture() {
     var data = request({
       method: 'GET',
       uri: 'https://graph.facebook.com/238887513329032',
@@ -268,4 +261,4 @@ Array.prototype.findReg = function(match) {
         }
         console.log(body);
     })
-  };*/
+  };
