@@ -40,13 +40,14 @@ app.post('/shophook', function (req, res) {
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
     if (shoplist.findReg(event.sender.id).length > 0 && roomlist.findReg(event.sender.id).length > 0){
-      var shopHash = roomlist.findReg(event.sender.id)[0].split(':')[1];
-      var patronID = shoplist.findReg(shopID)[0].split(':')[0];
+      var shopHash = shoplist.findReg(event.sender.id)[0].split(':')[1];
+      var patronID = roomlist.findReg(shopHash)[0].split(':')[0];
       if (event.message && event.message.text == "#bye") {
+          sendMessage(event.sender.id, {text: "さようなら"}, 'shop');
           sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
       } else {
-          sendMessage(shopID, event.message.text, 'shop');
+          sendMessage(shopID, event.message.text, 'patron');
           res.sendStatus(200);
       }
 
