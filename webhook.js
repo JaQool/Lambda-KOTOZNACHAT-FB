@@ -232,37 +232,15 @@ Array.prototype.findReg = function(match) {
 }
 
 // generic function sending messages
-app.get('/', (req, res) => {
+app.get('/token', (req, res) => {
     request({
-        url: 'https://graph.facebook.com/v2.6/me/messages/{page-id}?fields=access_token',
-        qs: {access_token: process.env.PATRON_ACCESS_TOKEN},
-        method: 'POST',
-        json: {
-            recipient: {id: recipientId},
-            message: message,
-        }
+        url: 'https://graph.facebook.com/238887513329032\?fields\=access_token',
+        method: 'GET'
     }, function(error, response, body) {
         if (error) {
-            console.log('Error sending message: ', error);
+            console.log('Error getting page id: ', error);
         } else if (response.body.error) {
             console.log('Error: ', response.body.error);
         }
     })
-  } else if (tokenType == 'shop'){
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: process.env.SHOP_ACCESS_TOKEN},
-        method: 'POST',
-        json: {
-            recipient: {id: recipientId},
-            message: message,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending message: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-        }
-    });
-  }
-};
+});
