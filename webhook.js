@@ -24,7 +24,6 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 // handler receiving messages
 app.post('/shophook', function (req, res) {
-  console.log('shophook');
   var shoplist = new Array();
   var roomlist = new Array();
   try {
@@ -38,7 +37,6 @@ app.post('/shophook', function (req, res) {
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    console.log(shoplist.findReg(event.sender.id));
     if (shoplist.findReg(event.sender.id).length > 0){
       if (event.message && event.message.text == "#bye") {
           sendMessage(event.sender.id, {text: "さようなら"}, 'shop');
@@ -105,7 +103,6 @@ app.get('/shophook', (req, res) => {
 
 // handler receiving messages
 app.post('/patronhook', function (req, res) {
-  console.log('patronhook');
   var shoplist = new Array();
   var roomlist = new Array();
   try {
@@ -119,16 +116,16 @@ app.post('/patronhook', function (req, res) {
   var events = req.body.entry[0].messaging;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    console.log(roomlist.findReg(event.sender.id));
     if (roomlist.findReg(event.sender.id).length > 0){
       var shopHash = roomlist.findReg(event.sender.id)[0].split(':')[1];
       var shopID = shoplist.findReg(shopID)[0].split(':')[0];
       console.log(shopID);
+      console.log(event.sender.id);
       if (event.message && event.message.text == "#bye") {
           sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
       } else {
-          sendMessage(shopID, {text: "こんにちは"}, 'patron');
+          sendMessage(event.sender.id, {text: "こんにちは"}, 'patron');
           res.sendStatus(200);
       }
     }else{
