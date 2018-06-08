@@ -42,7 +42,7 @@ app.post('/shophook', function (req, res) {
           sendMessage(event.sender.id, {text: "さようなら"}, 'shop');
           res.sendStatus(200);
       } else {
-          sendMessage(event.sender.id, {text: "こんにちは"}, 'shop');
+          sendMessage(1791167480950145, {text: "こんにちは"}, 'shop');
           res.sendStatus(200);
       }
     }else{
@@ -125,7 +125,7 @@ app.post('/patronhook', function (req, res) {
           sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
       } else {
-          sendMessage(shopID, {text: "こんにちは"}, 'patron');
+          sendMessage(1791167480950145, {text: "こんにちは"}, 'patron');
           res.sendStatus(200);
       }
     }else{
