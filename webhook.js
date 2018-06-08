@@ -233,36 +233,27 @@ Array.prototype.findReg = function(match) {
 
 
 
-module.exports = (app) => {
+/*module.exports = (app) => {
 
   // you'll need to have requested 'user_about_me' permissions
   // in order to get 'quotes' and 'about' fields from search
   const userFieldSet = 'name, link, is_verified, picture';
   const pageFieldSet = 'name, category, link, picture, is_verified';
-
+*/
 
   app.post('/facebook-search', (req, res) => {
-    const  { queryTerm, searchType } = req.body;
-
-    const options = {
+    request({
       method: 'GET',
-      uri: 'https://graph.facebook.com/search',
+      uri: 'https://graph.facebook.com/facebook/picture',
       qs: {
         access_token: process.env.SHOP_ACCESS_TOKEN,
-        q: queryTerm,
-        type: searchType,
-        fields: searchType === 'page' ? pageFieldSet : userFieldSet
+        redirect: false
       }
-    };
-
-    request(options)
-      .then(fbRes => {
-// Search results are in the data property of the response.
-// There is another property that allows for pagination of results.
-// Pagination will not be covered in this post,
-// so we only need the data property of the parsed response.
-        const parsedRes = JSON.parse(fbRes).data; 
-        res.json(parsedRes);
-      })
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }
+    })
   });
-}
