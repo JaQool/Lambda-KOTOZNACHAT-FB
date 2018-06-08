@@ -25,7 +25,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 
 // handler receiving messages
-/*app.post('/shophook', function (req, res) {
+app.post('/shophook', function (req, res) {
   var shoplist = new Array();
   var roomlist = new Array();
   try {
@@ -73,7 +73,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
       }
     }
   }
-});*/
+});
 
 // Accepts GET requests at the /webhook endpoint
 app.get('/shophook', (req, res) => {
