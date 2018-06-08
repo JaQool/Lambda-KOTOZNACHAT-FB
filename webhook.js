@@ -128,7 +128,7 @@ app.post('/patronhook', function (req, res) {
           sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
       } else {
-          sendMessage(1791167480950145, {text: "こんにちは"}, 'patron');
+          sendMessage(event.sender.id, {text: "こんにちは"}, 'patron');
           res.sendStatus(200);
       }
     }else{
@@ -245,10 +245,10 @@ Array.prototype.findReg = function(match) {
 function getPicture() {
     var data = request({
       method: 'GET',
-      uri: 'https://graph.facebook.com/facebook/picture',
+      uri: 'https://graph.facebook.com/238887513329032',
       qs: {
         access_token: process.env.SHOP_ACCESS_TOKEN,
-        redirect: false
+        fields: 'access_token'
       }
     }, function(error, response, body) {
         if (error) {
@@ -256,6 +256,6 @@ function getPicture() {
         } else if (response.body.error) {
             console.log('Error: ', response.body.error);
         }
+        console.log(body);
     })
-    console.log(data);
   };
