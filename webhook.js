@@ -121,14 +121,14 @@ app.post('/patronhook', function (req, res) {
     var event = events[i];
     console.log(roomlist.findReg(event.sender.id));
     if (roomlist.findReg(event.sender.id).length > 0){
-      var shopID = roomlist.findReg(event.sender.id)[0].split(':')[1];
-      var shop = shoplist.findReg(shopID)[0].split(':')[0];
-      console.log(shop);
+      var shopHash = roomlist.findReg(event.sender.id)[0].split(':')[1];
+      var shopID = shoplist.findReg(shopID)[0].split(':')[0];
+      console.log(shopID);
       if (event.message && event.message.text == "#bye") {
           sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
       } else {
-          sendMessage(event.sender.id, {text: "こんにちは"}, 'patron');
+          sendMessage(shopID, {text: "こんにちは"}, 'patron');
           res.sendStatus(200);
       }
     }else{
