@@ -128,7 +128,7 @@ app.post('/patronhook', function (req, res) {
           sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
       } else {
-          sendMessage(shopID, {text: "こんにちは"}, 'shop');
+          sendMessage(shopID, event.message.text, 'shop');
           res.sendStatus(200);
       }
     }else{
