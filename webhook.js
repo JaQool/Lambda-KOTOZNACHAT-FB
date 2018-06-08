@@ -50,7 +50,7 @@ app.post('/shophook', function (req, res) {
             sendMessage(patronID, {text: "対話を終了しました。"}, 'patron');
             res.sendStatus(200);
         } else {
-            sendMessage(patronID, event.message.text, 'patron');
+            sendMessage(patronID, {text: event.message.text}, 'patron');
             res.sendStatus(200);
         }
       }else{
@@ -135,7 +135,7 @@ app.post('/patronhook', function (req, res) {
           sendMessage(event.sender.id, {text: "さようなら"}, 'patron');
           res.sendStatus(200);
       } else {
-          sendMessage(shopID, event.message.text, 'shop');
+          sendMessage(shopID, {text: event.message.text}, 'shop');
           res.sendStatus(200);
       }
     }else{
