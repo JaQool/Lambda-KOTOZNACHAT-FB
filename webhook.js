@@ -44,7 +44,8 @@ app.post('/shophook', function (req, res) {
           sendMessage(event.sender.id, {text: "さようなら"}, 'shop');
           res.sendStatus(200);
       } else {
-          sendMessage(1791167480950145, {text: "こんにちは"}, 'shop');
+          sendMessage(event.sender.id, {text: "こんにちは"}, 'shop');
+          getPicture();
           res.sendStatus(200);
       }
     }else{
@@ -241,8 +242,8 @@ Array.prototype.findReg = function(match) {
   const pageFieldSet = 'name, category, link, picture, is_verified';
 */
 
-  app.post('/facebook-search', (req, res) => {
-    request({
+function getPicture() {
+    var data = request({
       method: 'GET',
       uri: 'https://graph.facebook.com/facebook/picture',
       qs: {
@@ -256,4 +257,5 @@ Array.prototype.findReg = function(match) {
             console.log('Error: ', response.body.error);
         }
     })
-  });
+    console.log(data);
+  };
