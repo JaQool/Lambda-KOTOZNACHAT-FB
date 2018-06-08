@@ -25,7 +25,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 
 // handler receiving messages
-app.post('/shophook', function (req, res) {
+/*app.post('/shophook', function (req, res) {
   var shoplist = new Array();
   var roomlist = new Array();
   try {
@@ -73,7 +73,7 @@ app.post('/shophook', function (req, res) {
       }
     }
   }
-});
+});*/
 
 // Accepts GET requests at the /webhook endpoint
 app.get('/shophook', (req, res) => {
@@ -232,9 +232,10 @@ Array.prototype.findReg = function(match) {
 }
 
 // generic function sending messages
-app.get('/token', (req, res) => {
+app.post('/shophook', (req, res) => {
+  console.log('enter');
     request({
-        url: 'https://graph.facebook.com/238887513329032\?fields\=access_token',
+        url: 'https://graph.facebook.com/238887513329032',
         method: 'GET'
     }, function(error, response, body) {
         if (error) {
